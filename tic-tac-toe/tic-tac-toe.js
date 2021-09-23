@@ -2,6 +2,10 @@ const statusDisplay = document.querySelector('.game--status');
 const currentPlayerTurn = () => `It's ${currentPlayer}'s turn`;
 const drawMessage = () => `Game ended in a draw!`;
 const winningMessage = () => `Player ${currentPlayer} has won!`;
+let playerWins = {
+    'X': 0,
+    'O': 0
+};
 
 function handleCellPlayed(clickedCell, clickedCellIndex) {
     boardState[clickedCellIndex] = currentPlayer;
@@ -11,6 +15,11 @@ function handleCellPlayed(clickedCell, clickedCellIndex) {
 function handlePlayerChange() {
     currentPlayer = currentPlayer === "X" ? "O" : "X";
     statusDisplay.innerHTML = currentPlayerTurn();
+}
+
+function handleWinDisplay() {
+    document.querySelector('.x--wins').innerHTML = `PLAYER X WINS: ${playerWins['X']}`;
+    document.querySelector('.o--wins').innerHTML = `PLAYER O WINS: ${playerWins['O']}`;
 }
 
 function handleResultValidation(cellIndex) {
@@ -30,7 +39,9 @@ function handleResultValidation(cellIndex) {
 
         if (currentPlayer === boardState[line[0]] && currentPlayer === boardState[line[1]]) {
             statusDisplay.innerHTML = winningMessage();
+            playerWins[currentPlayer]++;
             isGameActive = false;
+            handleWinDisplay();
             return;
         }
     }
@@ -62,6 +73,7 @@ function handleStartNewGame() {
     boardState = new Array(9).fill("");
     statusDisplay.innerHTML = currentPlayerTurn();
     document.querySelectorAll('.cell').forEach(cell => cell.innerHTML = "");
+    handleWinDisplay();
 }
 
 document.querySelectorAll('.cell').forEach(cell => cell.addEventListener('click', handleCellClick));
